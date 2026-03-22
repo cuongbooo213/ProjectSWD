@@ -202,8 +202,10 @@ namespace SWD_Project.Migrations
                 columns: new[] { "Id", "Email", "FullName", "IsBlocked", "PasswordHash", "Role", "Username" },
                 values: new object[,]
                 {
-                    { 1, "mentee1@gmail.com", "Nguyen Van A", false, "123456", 1, "mentee1" },
-                    { 2, "mentor@gmail.com", "Tran Van B", false, "123456", 2, "mentor1" }
+                    { 1, "mentee1@gmail.com", "Nguyen Van A", false, "e7618ce91a8c8d7c62754b8917a0f87c335d38c30380e6a410005db7ec7e294d", 1, "mentee1" },
+                    { 2, "mentor1@gmail.com", "Tran Van B", false, "5bdfbd1dde4f476feb6da42e31143fa7caead053b7f3c7d7ce13b6e95a9fc3c3", 2, "mentor1" },
+                    { 3, "admin@gmail.com", "System Administrator", false, "e86f78a8a3caf0b60d8e74e5942aa6d86dc150cd3c03338aef25b7d2d7e3acc7", 0, "admin" },
+                    { 4, "mentor2@gmail.com", "Le Thi C", false, "55d94109ab97d00a56905da181814c150c8b96261953384289685ba385fcac9e", 2, "mentor2" }
                 });
 
             migrationBuilder.InsertData(
@@ -216,9 +218,9 @@ namespace SWD_Project.Migrations
                 columns: new[] { "Id", "Content", "CreatedAt", "MenteeId", "MentorId", "Status", "Title" },
                 values: new object[,]
                 {
-                    { 1, "I want to learn MVC", new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4399), 1, 2, 0, "Learn ASP.NET Core" },
-                    { 2, "Need frontend mentor", new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4414), 1, 2, 1, "Learn React" },
-                    { 3, "Database optimization", new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4415), 1, 2, 2, "Learn SQL" }
+                    { 1, "I want to learn MVC", new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6362), 1, 2, 0, "Learn ASP.NET Core" },
+                    { 2, "Need frontend mentor", new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6379), 1, 2, 1, "Learn React" },
+                    { 3, "Database optimization", new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6380), 1, 2, 2, "Learn SQL" }
                 });
 
             migrationBuilder.InsertData(

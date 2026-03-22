@@ -162,7 +162,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 1,
                             Content = "I want to learn MVC",
-                            CreatedAt = new DateTime(2026, 3, 22, 17, 17, 54, 46, DateTimeKind.Local).AddTicks(1281),
+                            CreatedAt = new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6362),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 0,
@@ -172,7 +172,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 2,
                             Content = "Need frontend mentor",
-                            CreatedAt = new DateTime(2026, 3, 22, 17, 17, 54, 46, DateTimeKind.Local).AddTicks(1293),
+                            CreatedAt = new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6379),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 1,
@@ -182,7 +182,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 3,
                             Content = "Database optimization",
-                            CreatedAt = new DateTime(2026, 3, 22, 17, 17, 54, 46, DateTimeKind.Local).AddTicks(1295),
+                            CreatedAt = new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6380),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 2,

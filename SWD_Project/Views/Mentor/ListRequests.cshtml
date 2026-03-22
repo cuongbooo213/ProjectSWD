@@ -1,0 +1,128 @@
+@using SWD_Project.Models.Entities
+@using SWD_Project.Models.Enums
+@model IEnumerable<Request>
+
+@{
+    ViewData["Title"] = "My Assigned Requests";
+}
+
+<div class="container mt-4">
+    <h2>My Assigned Requests</h2>
+    <hr />
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tiêu đề</th>
+                    <th>Nội dung</th>
+                    <th>Mentee</th>
+                    <th>Ngày tạo</th>
+                    <th>Loại yêu cầu</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var req in Model)
+                    {
+                        <tr>
+                            <td><strong>@req.Title</strong></td>
+                            <td>@(req.Content.Length > 50 ? req.Content.Substring(0, 50) + "..." : req.Content)</td>
+                            <td>@req.Mentee?.FullName (<a href="mailto:@req.Mentee?.Email">@req.Mentee?.Email</a>)</td>
+                            <td>@req.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                @if (req.MentorId == null)
+                                {
+                                    <span class="badge bg-info text-dark">Open Request</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">Direct Request</span>
+                                }
+                            </td>
+                            <td>
+                                @switch (req.Status)
+                                {
+                                    case RequestStatus.Pending:
+                                        <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                                        break;
+                                    case RequestStatus.Accepted:
+                                        <span class="badge bg-success">Đã nhận</span>
+                                        break;
+                                    case RequestStatus.Completed:
+                                        <span class="badge bg-secondary">Hoàn thành</span>
+                                        break;
+                                    case RequestStatus.Rejected:
+                                        <span class="badge bg-danger">Đã từ chối</span>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                @if (req.Status == RequestStatus.Pending)
+                                {
+                                    <div class="d-flex gap-2">
+                                        <form asp-action="AcceptRequest" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn nhận yêu cầu này không?');">
+                                            <input type="hidden" name="id" value="@req.Id" />
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                <i class="bi bi-check-circle"></i> Accept
+                                            </button>
+                                        </form>
+
+                                        @if (req.MentorId != null)
+                                        {
+                                            <form asp-action="RejectRequest" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn từ chối yêu cầu này không?');">
+                                                <input type="hidden" name="id" value="@req.Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="bi bi-x-circle"></i> Reject
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                }
+                                else if (req.Status == RequestStatus.Accepted)
+                                {
+                                    <form asp-action="CompleteRequest" method="post" onsubmit="return confirm('Đánh dấu yêu cầu này là đã hoàn thành?');">
+                                        <input type="hidden" name="id" value="@req.Id" />
+                                        <button type="submit" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-check2-all"></i> Đánh dấu Hoàn thành
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted fst-italic">Không có hành động</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            Không có yêu cầu nào.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

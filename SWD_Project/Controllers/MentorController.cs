@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SWD_Project.Data;
 using SWD_Project.Models.Entities;
+using SWD_Project.Models.Enums;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Linq;
@@ -108,6 +109,112 @@ namespace SWD_Project.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("MyCV");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ListRequests()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var requests = await _context.Requests
+                .Include(r => r.Mentee)
+                .Where(r => r.MentorId == userId || (r.MentorId == null && r.Status == RequestStatus.Pending))
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+
+            return View(requests);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AcceptRequest(int id)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var request = await _context.Requests.FindAsync(id);
+
+            if (request == null)
+            {
+                TempData["Error"] = "Request not found.";
+                return RedirectToAction(nameof(ListRequests));
+            }
+
+            // Only Pending requests can be accepted
+            if (request.Status != RequestStatus.Pending)
+            {
+                TempData["Error"] = "This request is no longer available.";
+                return RedirectToAction(nameof(ListRequests));
+            }
+
+            // Can accept if it's open (MentorId null) OR directly assigned to this mentor
+            if (request.MentorId == null || request.MentorId == userId)
+            {
+                request.MentorId = userId;
+                request.Status = RequestStatus.Accepted;
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "You have successfully accepted the request.";
+            }
+            else
+            {
+                TempData["Error"] = "You don't have permission to accept this request.";
+            }
+
+            return RedirectToAction(nameof(ListRequests));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectRequest(int id)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var request = await _context.Requests.FindAsync(id);
+
+            if (request == null)
+            {
+                TempData["Error"] = "Request not found.";
+                return RedirectToAction(nameof(ListRequests));
+            }
+
+            // Can only reject Direct Requests that are currently Pending
+            if (request.MentorId == userId && request.Status == RequestStatus.Pending)
+            {
+                request.Status = RequestStatus.Rejected;
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "You have rejected the request.";
+            }
+            else
+            {
+                TempData["Error"] = "You cannot reject this request.";
+            }
+
+            return RedirectToAction(nameof(ListRequests));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CompleteRequest(int id)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var request = await _context.Requests.FindAsync(id);
+
+            if (request == null)
+            {
+                TempData["Error"] = "Request not found.";
+                return RedirectToAction(nameof(ListRequests));
+            }
+
+            // Can only complete Accepted requests assigned to this mentor
+            if (request.MentorId == userId && request.Status == RequestStatus.Accepted)
+            {
+                request.Status = RequestStatus.Completed;
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "You have marked the request as Completed.";
+            }
+            else
+            {
+                TempData["Error"] = "You cannot complete this request.";
+            }
+
+            return RedirectToAction(nameof(ListRequests));
         }
     }
 }

@@ -12,7 +12,7 @@ using SWD_Project.Data;
 namespace SWD_Project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260322095313_InitCreate")]
+    [Migration("20260322113721_InitCreate")]
     partial class InitCreate
     {
         /// <inheritdoc />
@@ -165,7 +165,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 1,
                             Content = "I want to learn MVC",
-                            CreatedAt = new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4399),
+                            CreatedAt = new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6362),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 0,
@@ -175,7 +175,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 2,
                             Content = "Need frontend mentor",
-                            CreatedAt = new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4414),
+                            CreatedAt = new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6379),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 1,
@@ -185,7 +185,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 3,
                             Content = "Database optimization",
-                            CreatedAt = new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4415),
+                            CreatedAt = new DateTime(2026, 3, 22, 18, 37, 20, 962, DateTimeKind.Local).AddTicks(6380),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 2,
@@ -379,19 +379,39 @@ namespace SWD_Project.Migrations
                             Email = "mentee1@gmail.com",
                             FullName = "Nguyen Van A",
                             IsBlocked = false,
-                            PasswordHash = "123456",
+                            PasswordHash = "e7618ce91a8c8d7c62754b8917a0f87c335d38c30380e6a410005db7ec7e294d",
                             Role = 1,
                             Username = "mentee1"
                         },
                         new
                         {
                             Id = 2,
-                            Email = "mentor@gmail.com",
+                            Email = "mentor1@gmail.com",
                             FullName = "Tran Van B",
                             IsBlocked = false,
-                            PasswordHash = "123456",
+                            PasswordHash = "5bdfbd1dde4f476feb6da42e31143fa7caead053b7f3c7d7ce13b6e95a9fc3c3",
                             Role = 2,
                             Username = "mentor1"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "admin@gmail.com",
+                            FullName = "System Administrator",
+                            IsBlocked = false,
+                            PasswordHash = "e86f78a8a3caf0b60d8e74e5942aa6d86dc150cd3c03338aef25b7d2d7e3acc7",
+                            Role = 0,
+                            Username = "admin"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Email = "mentor2@gmail.com",
+                            FullName = "Le Thi C",
+                            IsBlocked = false,
+                            PasswordHash = "55d94109ab97d00a56905da181814c150c8b96261953384289685ba385fcac9e",
+                            Role = 2,
+                            Username = "mentor2"
                         });
                 });
 

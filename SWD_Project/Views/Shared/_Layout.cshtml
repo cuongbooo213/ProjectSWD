@@ -37,6 +37,9 @@
                         @if (User.IsInRole(SWD_Project.Models.Enums.Role.Mentor.ToString()))
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Mentor" asp-action="ListRequests">Assigned Requests</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Mentor" asp-action="MyCV">My CV</a>
                             </li>
                         }

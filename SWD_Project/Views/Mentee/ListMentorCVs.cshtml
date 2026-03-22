@@ -8,7 +8,7 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Danh sách Mentor CV</h2>
-        <a asp-action="ListRequests" class="btn btn-secondary">Quay về danh sách Yêu cầu</a>
+        <a asp-controller="Request" asp-action="Index" class="btn btn-secondary">Quay về danh sách Yêu cầu</a>
     </div>
     
     <hr />
@@ -83,7 +83,7 @@
                             </div>
                         </div>
                         <div class="card-footer bg-white border-top-0 pb-4 pt-0">
-                            <a asp-action="CreateRequest" asp-route-mentorId="@cv.MentorId" class="btn btn-outline-primary w-100 fw-bold" style="border-radius: 8px;">
+                            <a asp-controller="Request" asp-action="Create" asp-route-mentorId="@cv.MentorId" class="btn btn-outline-primary w-100 fw-bold" style="border-radius: 8px;">
                                 Gửi Yêu cầu hỗ trợ
                             </a>
                         </div>
