@@ -26,14 +26,35 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Mentee" asp-action="ListRequests">My Requests</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Request" asp-action="Index">My Requests</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Mentee" asp-action="ListMentorCVs">Mentor CVs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Mentee" asp-action="StatisticRequest">Statistics</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Request" asp-action="Statistics">Statistics</a>
                         </li>
+                        @if (User.IsInRole(SWD_Project.Models.Enums.Role.Mentor.ToString()))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Mentor" asp-action="MyCV">My CV</a>
+                            </li>
+                        }
+                        @if (User.IsInRole(SWD_Project.Models.Enums.Role.Admin.ToString()))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ManageCVs">Approve CVs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ListAccounts">Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ListCategories">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ListSkills">Skills</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav">
                         @if (User?.Identity?.IsAuthenticated == true)

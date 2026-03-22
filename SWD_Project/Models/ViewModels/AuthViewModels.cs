@@ -33,5 +33,8 @@ namespace SWD_Project.Models.ViewModels
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required(ErrorMessage = "Please select a Role")]
+        public Role Role { get; set; }
     }
 }

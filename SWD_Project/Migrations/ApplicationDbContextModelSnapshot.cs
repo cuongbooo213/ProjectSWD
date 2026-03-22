@@ -98,6 +98,9 @@ namespace SWD_Project.Migrations
                     b.Property<int>("ExperienceYears")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
                     b.Property<int>("MentorId")
                         .HasColumnType("int");
 
@@ -113,6 +116,7 @@ namespace SWD_Project.Migrations
                             Id = 1,
                             Bio = "Senior .NET Developer with 5 years of experience.",
                             ExperienceYears = 5,
+                            IsApproved = false,
                             MentorId = 2
                         });
                 });
@@ -158,7 +162,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 1,
                             Content = "I want to learn MVC",
-                            CreatedAt = new DateTime(2026, 3, 22, 15, 27, 56, 387, DateTimeKind.Local).AddTicks(3987),
+                            CreatedAt = new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4399),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 0,
@@ -168,7 +172,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 2,
                             Content = "Need frontend mentor",
-                            CreatedAt = new DateTime(2026, 3, 22, 15, 27, 56, 387, DateTimeKind.Local).AddTicks(4014),
+                            CreatedAt = new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4414),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 1,
@@ -178,7 +182,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 3,
                             Content = "Database optimization",
-                            CreatedAt = new DateTime(2026, 3, 22, 15, 27, 56, 387, DateTimeKind.Local).AddTicks(4015),
+                            CreatedAt = new DateTime(2026, 3, 22, 16, 53, 13, 59, DateTimeKind.Local).AddTicks(4415),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 2,
@@ -347,6 +351,9 @@ namespace SWD_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -368,6 +375,7 @@ namespace SWD_Project.Migrations
                             Id = 1,
                             Email = "mentee1@gmail.com",
                             FullName = "Nguyen Van A",
+                            IsBlocked = false,
                             PasswordHash = "123456",
                             Role = 1,
                             Username = "mentee1"
@@ -377,6 +385,7 @@ namespace SWD_Project.Migrations
                             Id = 2,
                             Email = "mentor@gmail.com",
                             FullName = "Tran Van B",
+                            IsBlocked = false,
                             PasswordHash = "123456",
                             Role = 2,
                             Username = "mentor1"

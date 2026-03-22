@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SWD_Project.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using SWD_Project.Service.Interfaces;
-using SWD_Project.Service.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -12,8 +10,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 );
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {

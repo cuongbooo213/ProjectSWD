@@ -13,6 +13,8 @@ namespace SWD_Project.Models.Entities
 
         public int ExperienceYears { get; set; }
 
+        public bool IsApproved { get; set; } = false;
+
         public ICollection<Skill> Skills { get; set; }
 
         [ForeignKey("MentorId")]

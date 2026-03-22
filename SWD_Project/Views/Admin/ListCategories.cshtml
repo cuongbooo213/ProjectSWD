@@ -1,0 +1,69 @@
+@model IEnumerable<SWD_Project.Models.Entities.SkillCategory>
+
+@{
+    ViewData["Title"] = "Manage Categories";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Skill Categories</h1>
+    <a asp-action="CreateCategory" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> New Category
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">@TempData["Success"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">@TempData["Error"]<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+}
+
+<form method="get" asp-action="ListCategories" class="row g-2 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search by name or description..." />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a asp-action="ListCategories" class="btn btn-outline-secondary ms-1">Reset</a>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Skills</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cat in Model)
+            {
+                <tr>
+                    <td>@cat.Id</td>
+                    <td class="fw-bold">@cat.Name</td>
+                    <td>@cat.Description</td>
+                    <td><span class="badge bg-primary">@(cat.Skills?.Count ?? 0)</span></td>
+                    <td>
+                        <a asp-action="EditCategory" asp-route-id="@cat.Id" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                        <form asp-action="DeleteCategory" method="post" class="d-inline"
+                              onsubmit="return confirm('Delete category \'@cat.Name\'?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@cat.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="5" class="text-center text-muted py-4">No categories found.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

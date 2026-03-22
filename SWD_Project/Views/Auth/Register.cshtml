@@ -53,7 +53,7 @@
                         <div class="col-lg-7 auth-form-wrapper">
                             <div class="text-center mb-4">
                                 <h2 class="fw-bold text-gray-900 mb-2">Join HappyProgramming</h2>
-                                <p class="text-muted">Create a new <strong>Mentee</strong> account today!</p>
+                                <p class="text-muted">Create a new account today!</p>
                             </div>
 
                             <form asp-action="Register" method="post" class="user">
@@ -80,6 +80,21 @@
                                     <input asp-for="Email" class="form-control rounded-pill px-4" type="email" placeholder="name@example.com" />
                                     <label asp-for="Email" class="ms-2">Email address</label>
                                     <span asp-validation-for="Email" class="text-danger small ms-3"></span>
+                                </div>
+
+                                <div class="mb-3 px-3">
+                                    <label class="form-label ms-1 fw-bold text-muted">Register As</label>
+                                    <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-4 ms-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input border-secondary" type="radio" asp-for="Role" value="@SWD_Project.Models.Enums.Role.Mentee" checked>
+                                            <label class="form-check-label" asp-for="Role">Mentee <small class="text-muted d-block">Learn specific skills</small></label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input border-secondary" type="radio" asp-for="Role" value="@SWD_Project.Models.Enums.Role.Mentor">
+                                            <label class="form-check-label" asp-for="Role">Mentor <small class="text-muted d-block">Teach and share knowledge</small></label>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="Role" class="text-danger small ms-3"></span>
                                 </div>
 
                                 <div class="row g-3 mb-4">

@@ -1,0 +1,75 @@
+@model IEnumerable<SWD_Project.Models.Entities.MentorCV>
+
+@{
+    ViewData["Title"] = "Manage Mentor CVs";
+}
+
+<h1 class="mb-4">Manage Mentor CVs</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Mentor Name</th>
+                <th>Bio</th>
+                <th>Experience</th>
+                <th>Skills</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cv in Model)
+            {
+                <tr>
+                    <td class="fw-bold">@cv.Mentor?.FullName</td>
+                    <td><div class="text-truncate" style="max-width: 200px;" title="@cv.Bio">@cv.Bio</div></td>
+                    <td>@cv.ExperienceYears years</td>
+                    <td>
+                        @if (cv.Skills != null)
+                        {
+                            foreach (var s in cv.Skills)
+                            {
+                                <span class="badge bg-secondary">@s.Name</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (cv.IsApproved)
+                        {
+                            <span class="badge bg-success">Approved</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-action="ApproveCV" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@cv.Id" />
+                            @if (!cv.IsApproved)
+                            {
+                                <input type="hidden" name="approve" value="true" />
+                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                            }
+                            else
+                            {
+                                <input type="hidden" name="approve" value="false" />
+                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                            }
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="6" class="text-center text-muted py-4">No CVs found.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,23 +1,28 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SWD_Project.Data;
 using SWD_Project.Models.Entities;
 using SWD_Project.Models.ViewModels;
-using SWD_Project.Service.Interfaces;
 using SWD_Project.Models.Enums;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SWD_Project.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly IAccountService _accountService;
+        private readonly ApplicationDbContext _context;
 
-        public AuthController(IAccountService accountService)
+        public AuthController(ApplicationDbContext context)
         {
-            _accountService = accountService;
+            _context = context;
         }
 
         [HttpGet]
@@ -33,9 +38,14 @@ namespace SWD_Project.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = await _accountService.AuthenticateAsync(model.Username, model.Password);
-                if (user != null)
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
+                if (user != null && VerifyPassword(model.Password, user.PasswordHash))
                 {
+                    if (user.IsBlocked)
+                    {
+                        ModelState.AddModelError(string.Empty, "Your account has been blocked. Please contact support.");
+                        return View(model);
+                    }
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -74,15 +84,21 @@ namespace SWD_Project.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_accountService.IsUsernameDuplicate(model.Username))
+                if (_context.Users.Any(u => u.Username == model.Username))
                 {
                     ModelState.AddModelError("Username", "Username is already taken.");
                     return View(model);
                 }
                 
-                if (_accountService.IsEmailDuplicate(model.Email))
+                if (_context.Users.Any(u => u.Email == model.Email))
                 {
                     ModelState.AddModelError("Email", "Email is already in use.");
+                    return View(model);
+                }
+
+                if (model.Role != Role.Mentee && model.Role != Role.Mentor)
+                {
+                    ModelState.AddModelError("Role", "Please select a valid role (Mentee or Mentor).");
                     return View(model);
                 }
 
@@ -91,16 +107,15 @@ namespace SWD_Project.Controllers
                     Username = model.Username,
                     FullName = model.FullName,
                     Email = model.Email,
-                    Role = Role.Mentee // Default registration is Mentee
+                    Role = model.Role,
+                    PasswordHash = HashPassword(model.Password)
                 };
 
-                var result = await _accountService.RegisterAsync(user, model.Password);
-                if (result)
-                {
-                    TempData["SuccessMessage"] = "Registration successful! You can now log in.";
-                    return RedirectToAction("Login");
-                }
-                ModelState.AddModelError(string.Empty, "An error occurred during registration. Please try again.");
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Registration successful! You can now log in.";
+                return RedirectToAction("Login");
             }
             return View(model);
         }
@@ -110,6 +125,21 @@ namespace SWD_Project.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
+        }
+
+        private string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+            }
+        }
+
+        private bool VerifyPassword(string password, string hash)
+        {
+            if (hash == password) return true;
+            return HashPassword(password) == hash;
         }
     }
 }
