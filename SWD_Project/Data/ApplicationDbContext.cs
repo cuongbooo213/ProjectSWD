@@ -37,24 +37,51 @@ namespace SWD_Project.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // ===== SEED USERS =====
+            // Passwords (SHA256 hashed):
+            //   mentee1   -> Mentee@123
+            //   mentor1   -> Mentor@123
+            //   admin     -> Admin@123
+            //   mentor2   -> Mentor@456
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     Id = 1,
                     Username = "mentee1",
-                    PasswordHash = "123456",
+                    PasswordHash = "e7618ce91a8c8d7c62754b8917a0f87c335d38c30380e6a410005db7ec7e294d",
                     FullName = "Nguyen Van A",
                     Role = Role.Mentee,
-                    Email = "mentee1@gmail.com"
+                    Email = "mentee1@gmail.com",
+                    IsBlocked = false
                 },
                 new User
                 {
                     Id = 2,
                     Username = "mentor1",
-                    PasswordHash = "123456",
+                    PasswordHash = "5bdfbd1dde4f476feb6da42e31143fa7caead053b7f3c7d7ce13b6e95a9fc3c3",
                     FullName = "Tran Van B",
                     Role = Role.Mentor,
-                    Email = "mentor@gmail.com"
+                    Email = "mentor1@gmail.com",
+                    IsBlocked = false
+                },
+                new User
+                {
+                    Id = 3,
+                    Username = "admin",
+                    PasswordHash = "e86f78a8a3caf0b60d8e74e5942aa6d86dc150cd3c03338aef25b7d2d7e3acc7",
+                    FullName = "System Administrator",
+                    Role = Role.Admin,
+                    Email = "admin@gmail.com",
+                    IsBlocked = false
+                },
+                new User
+                {
+                    Id = 4,
+                    Username = "mentor2",
+                    PasswordHash = "55d94109ab97d00a56905da181814c150c8b96261953384289685ba385fcac9e",
+                    FullName = "Le Thi C",
+                    Role = Role.Mentor,
+                    Email = "mentor2@gmail.com",
+                    IsBlocked = false
                 }
             );
 
