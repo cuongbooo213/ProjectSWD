@@ -158,7 +158,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 1,
                             Content = "I want to learn MVC",
-                            CreatedAt = new DateTime(2026, 3, 22, 12, 42, 35, 318, DateTimeKind.Local).AddTicks(8395),
+                            CreatedAt = new DateTime(2026, 3, 22, 13, 54, 38, 663, DateTimeKind.Local).AddTicks(4505),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 0,
@@ -168,7 +168,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 2,
                             Content = "Need frontend mentor",
-                            CreatedAt = new DateTime(2026, 3, 22, 12, 42, 35, 318, DateTimeKind.Local).AddTicks(8411),
+                            CreatedAt = new DateTime(2026, 3, 22, 13, 54, 38, 663, DateTimeKind.Local).AddTicks(4520),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 1,
@@ -178,7 +178,7 @@ namespace SWD_Project.Migrations
                         {
                             Id = 3,
                             Content = "Database optimization",
-                            CreatedAt = new DateTime(2026, 3, 22, 12, 42, 35, 318, DateTimeKind.Local).AddTicks(8414),
+                            CreatedAt = new DateTime(2026, 3, 22, 13, 54, 38, 663, DateTimeKind.Local).AddTicks(4522),
                             MenteeId = 1,
                             MentorId = 2,
                             Status = 2,
@@ -380,6 +380,15 @@ namespace SWD_Project.Migrations
                             PasswordHash = "123456",
                             Role = 2,
                             Username = "mentor1"
+                        },
+                        new
+                        {
+                            Id = 1000,
+                            Email = "admin@happyprogramming.com",
+                            FullName = "Admin HP",
+                            PasswordHash = "admin123",
+                            Role = 0,
+                            Username = "adminhp123"
                         });
                 });
 

@@ -153,9 +153,13 @@ namespace SWD_Project.Controllers
         }
 
         // STATISTIC
+        [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> StatisticRequest()
         {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             var stats = await _context.Requests
+                .Where(r => r.MenteeId == userId)
                 .GroupBy(r => r.Status)
                 .Select(g => new
                 {

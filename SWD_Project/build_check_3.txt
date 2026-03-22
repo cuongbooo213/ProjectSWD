@@ -1,0 +1,15 @@
+﻿  Determining projects to restore...
+  Restored F:\Study\ProjectSWD\SWD_Project\SWD_Project.csproj (in 400 ms).
+F:\Study\ProjectSWD\SWD_Project\Program.cs(7,1): error CS8802: Only one compilation unit can have top-level statements. [F:\Study\ProjectSWD\SWD_Project\SWD_Project.csproj]
+F:\Study\ProjectSWD\SWD_Project\Controllers\AuthController.cs(24,55): warning CS8625: Cannot convert null literal to non-nullable reference type. [F:\Study\ProjectSWD\SWD_Project\SWD_Project.csproj]
+F:\Study\ProjectSWD\SWD_Project\Controllers\AuthController.cs(31,89): warning CS8625: Cannot convert null literal to non-nullable reference type. [F:\Study\ProjectSWD\SWD_Project\SWD_Project.csproj]
+
+Build FAILED.
+
+F:\Study\ProjectSWD\SWD_Project\Controllers\AuthController.cs(24,55): warning CS8625: Cannot convert null literal to non-nullable reference type. [F:\Study\ProjectSWD\SWD_Project\SWD_Project.csproj]
+F:\Study\ProjectSWD\SWD_Project\Controllers\AuthController.cs(31,89): warning CS8625: Cannot convert null literal to non-nullable reference type. [F:\Study\ProjectSWD\SWD_Project\SWD_Project.csproj]
+F:\Study\ProjectSWD\SWD_Project\Program.cs(7,1): error CS8802: Only one compilation unit can have top-level statements. [F:\Study\ProjectSWD\SWD_Project\SWD_Project.csproj]
+    2 Warning(s)
+    1 Error(s)
+
+Time Elapsed 00:00:02.38
