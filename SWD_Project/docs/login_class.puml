@@ -1,0 +1,39 @@
+@startuml LoginClass
+class AuthController {
+  - IAccountService _accountService
+  + Login(string returnUrl) : IActionResult
+  + Login(LoginViewModel model, string returnUrl) : Task<IActionResult>
+}
+
+interface IAccountService {
+  + AuthenticateAsync(string username, string password) : Task<User>
+}
+
+class AccountService {
+  - ApplicationDbContext _context
+  + AuthenticateAsync(string username, string password) : Task<User>
+  - VerifyPassword(string password, string hash) : bool
+}
+
+class ApplicationDbContext {
+  + DbSet<User> Users
+}
+
+class User {
+  + Id : int
+  + Username : string
+  + PasswordHash : string
+  + Role : Role
+}
+
+class LoginViewModel {
+  + Username : string
+  + Password : string
+}
+
+AuthController --> IAccountService : uses
+AccountService ..|> IAccountService : implements
+AccountService --> ApplicationDbContext : uses
+ApplicationDbContext --> User : manages
+AuthController ..> LoginViewModel : uses
+@enduml

@@ -11,7 +11,7 @@ namespace SWD_Project.Models.Entities
 
         public string Bio { get; set; }
 
-        public string Experience { get; set; }
+        public int ExperienceYears { get; set; }
 
         public ICollection<Skill> Skills { get; set; }
 

@@ -15,7 +15,11 @@ namespace SWD_Project.Models.Entities
         public int CategoryId { get; set; }
 
         [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
+        public SkillCategory Category { get; set; }
+
+        public string Description { get; set; }
+
+        public bool IsActive { get; set; }
 
         public ICollection<MentorCV> MentorCVs { get; set; }
     }

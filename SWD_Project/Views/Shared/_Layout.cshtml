@@ -35,6 +35,28 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Mentee" asp-action="StatisticRequest">Statistics</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav">
+                        @if (User?.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item d-flex align-items-center">
+                                <span class="text-dark me-3 fw-bold">Hello, @(User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value ?? User.Identity.Name)!</span>
+                            </li>
+                            <li class="nav-item d-flex align-items-center">
+                                <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0 p-0">
+                                    <button type="submit" class="nav-link btn btn-link text-danger fw-bold shadow-none p-0 border-0 m-0">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fw-bold" asp-controller="Auth" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary ms-2" asp-controller="Auth" asp-action="Register">Register</a>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>

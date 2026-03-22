@@ -1,0 +1,36 @@
+@startuml RegisterSequence
+actor User
+participant View
+participant AuthController
+participant AccountService
+participant ApplicationDbContext
+database SQLServer
+
+User -> View: Fill registration form & Submit
+View -> AuthController: POST /Auth/Register
+AuthController -> AuthController: Validate ModelState
+alt Valid Model
+    AuthController -> AccountService: IsUsernameDuplicate(username)
+    AccountService -> ApplicationDbContext: Any(u.Username == username)
+    ApplicationDbContext -> SQLServer: SELECT EXISTS (...)
+    SQLServer --> ApplicationDbContext: boolean result
+    ApplicationDbContext --> AccountService: boolean result
+    AccountService --> AuthController: isDuplicate
+
+    alt Not duplicate
+        AuthController -> AccountService: RegisterAsync(newUser, password)
+        AccountService -> AccountService: HashPassword(password)
+        AccountService -> ApplicationDbContext: Add(newUser)
+        AccountService -> ApplicationDbContext: SaveChangesAsync()
+        ApplicationDbContext -> SQLServer: INSERT INTO Users
+        SQLServer --> ApplicationDbContext: success
+        ApplicationDbContext --> AccountService: success
+        AccountService --> AuthController: true
+        AuthController -> View: Redirect to Login(SuccessMessage)
+    else Duplicate
+        AuthController -> View: Return View with Error
+    end
+else Invalid Model
+    AuthController -> View: Return View with Validation Errors
+end
+@enduml

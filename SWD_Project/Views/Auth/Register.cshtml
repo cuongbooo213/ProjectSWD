@@ -1,0 +1,123 @@
+@model SWD_Project.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    body {
+        background-color: #f4f7f6;
+    }
+    .auth-bg {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+    }
+    .auth-card {
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .auth-image {
+        background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+    }
+    .auth-form-wrapper {
+        padding: 3rem;
+        background-color: white;
+    }
+    .btn-brand {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    .btn-brand:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
+        color: white;
+    }
+</style>
+
+<div class="auth-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card auth-card border-0">
+                    <div class="row g-0 flex-row-reverse">
+                        <div class="col-lg-5 d-none d-lg-block auth-image"></div>
+                        <div class="col-lg-7 auth-form-wrapper">
+                            <div class="text-center mb-4">
+                                <h2 class="fw-bold text-gray-900 mb-2">Join HappyProgramming</h2>
+                                <p class="text-muted">Create a new <strong>Mentee</strong> account today!</p>
+                            </div>
+
+                            <form asp-action="Register" method="post" class="user">
+                                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3 ms-2"></div>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="Username" class="form-control rounded-pill px-4" placeholder="Enter username" />
+                                            <label asp-for="Username" class="ms-2">Username</label>
+                                            <span asp-validation-for="Username" class="text-danger small ms-3"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="FullName" class="form-control rounded-pill px-4" placeholder="Enter your full name" />
+                                            <label asp-for="FullName" class="ms-2">Full Name</label>
+                                            <span asp-validation-for="FullName" class="text-danger small ms-3"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Email" class="form-control rounded-pill px-4" type="email" placeholder="name@example.com" />
+                                    <label asp-for="Email" class="ms-2">Email address</label>
+                                    <span asp-validation-for="Email" class="text-danger small ms-3"></span>
+                                </div>
+
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="Password" class="form-control rounded-pill px-4" type="password" placeholder="Create a password" />
+                                            <label asp-for="Password" class="ms-2">Password</label>
+                                            <span asp-validation-for="Password" class="text-danger small ms-3"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="ConfirmPassword" class="form-control rounded-pill px-4" type="password" placeholder="Confirm password" />
+                                            <label asp-for="ConfirmPassword" class="ms-2">Confirm Password</label>
+                                            <span asp-validation-for="ConfirmPassword" class="text-danger small ms-3"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2 mb-4">
+                                    <button type="submit" class="btn btn-brand btn-lg rounded-pill fw-bold">Register Account</button>
+                                </div>
+                            </form>
+
+                            <hr>
+                            
+                            <div class="text-center mt-4">
+                                <span class="text-muted">Already have an account?</span>
+                                <a asp-action="Login" class="text-decoration-none fw-bold text-success ms-1">Login here!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

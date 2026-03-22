@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SWD_Project.Data;
 using SWD_Project.Models.Entities;
+using SWD_Project.Models.Enums;
+using System.Security.Claims;
 
 namespace SWD_Project.Controllers
 {
@@ -15,17 +18,22 @@ namespace SWD_Project.Controllers
         }
 
         // LIST
+        [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> ListRequests()
         {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
             var requests = await _context.Requests
                 .Include(r => r.Mentee)
                 .Include(r => r.Mentor)
+                .Where(r => r.MenteeId == userId)
                 .ToListAsync();
 
             return View(requests);
         }
 
         // CREATE
+        [Authorize(Roles = "Mentee")]
         public IActionResult CreateRequest()
         {
             ViewBag.Mentors = _context.Users.Where(u => u.Role == Role.Mentor).ToList();
@@ -33,6 +41,7 @@ namespace SWD_Project.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> CreateRequest([Bind("Title,Content,MentorId")] Request request)
         {
             ModelState.Remove("Mentee");
@@ -40,7 +49,7 @@ namespace SWD_Project.Controllers
 
             if (ModelState.IsValid)
             {
-                request.MenteeId = 1; // demo
+                request.MenteeId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 request.CreatedAt = DateTime.Now;
                 request.Status = RequestStatus.Pending;
 
@@ -55,10 +64,13 @@ namespace SWD_Project.Controllers
         }
 
         // UPDATE
+        [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> UpdateRequest(int id)
         {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var request = await _context.Requests.FindAsync(id);
-            if (request == null) return NotFound();
+            
+            if (request == null || request.MenteeId != userId) return NotFound();
 
             if (request.Status != RequestStatus.Pending)
             {
@@ -69,6 +81,7 @@ namespace SWD_Project.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> UpdateRequest(int id, [Bind("Id,Title,Content")] Request model)
         {
             ModelState.Remove("Mentee");
@@ -76,8 +89,10 @@ namespace SWD_Project.Controllers
 
             if (id != model.Id) return NotFound();
 
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var request = await _context.Requests.FindAsync(id);
-            if (request == null) return NotFound();
+            
+            if (request == null || request.MenteeId != userId) return NotFound();
 
             if (request.Status != RequestStatus.Pending)
             {
@@ -94,15 +109,17 @@ namespace SWD_Project.Controllers
         }
 
         // DELETE
+        [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> DeleteRequest(int? id)
         {
             if (id == null) return NotFound();
 
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var request = await _context.Requests
                 .Include(r => r.Mentee)
                 .FirstOrDefaultAsync(m => m.Id == id);
             
-            if (request == null) return NotFound();
+            if (request == null || request.MenteeId != userId) return NotFound();
 
             if (request.Status != RequestStatus.Pending)
             {
@@ -115,10 +132,13 @@ namespace SWD_Project.Controllers
 
         [HttpPost, ActionName("DeleteRequest")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var request = await _context.Requests.FindAsync(id);
-            if (request != null)
+            
+            if (request != null && request.MenteeId == userId)
             {
                 if (request.Status != RequestStatus.Pending)
                 {
@@ -167,7 +187,7 @@ namespace SWD_Project.Controllers
 
             var cvs = await query.ToListAsync();
 
-            ViewBag.Categories = await _context.Categories.ToListAsync();
+            ViewBag.Categories = await _context.SkillCategories.ToListAsync();
             
             // Lọc danh sách Skill dựa theo CategoryId (nếu user chọn Category trước) 
             if (categoryId.HasValue)

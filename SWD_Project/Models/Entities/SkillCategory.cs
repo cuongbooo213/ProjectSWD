@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SWD_Project.Models.Entities
 {
-    public class Category
+    public class SkillCategory
     {
         public int Id { get; set; }
 

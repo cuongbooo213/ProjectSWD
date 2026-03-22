@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SWD_Project.Models.Entities;
+using SWD_Project.Models.Enums;
 
 namespace SWD_Project.Data
 {
@@ -13,8 +14,10 @@ namespace SWD_Project.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<MentorCV> MentorCVs { get; set; }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<SkillCategory> SkillCategories { get; set; }
         public DbSet<Skill> Skills { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<ChatBotLog> ChatBotLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -96,23 +99,23 @@ namespace SWD_Project.Data
                     Id = 1,
                     MentorId = 2,
                     Bio = "Senior .NET Developer with 5 years of experience.",
-                    Experience = "FPT Software (2020-2023), VNG (2023-Present)"
+                    ExperienceYears = 5
                 }
             );
 
             // ===== SEED CATEGORY & SKILLS =====
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "Programming Languages", Description = "Core programming languages" },
-                new Category { Id = 2, Name = "Frameworks", Description = "Web and App Frameworks" },
-                new Category { Id = 3, Name = "Databases", Description = "Relational and NoSQL DBs" }
+            modelBuilder.Entity<SkillCategory>().HasData(
+                new SkillCategory { Id = 1, Name = "Programming Languages", Description = "Core programming languages" },
+                new SkillCategory { Id = 2, Name = "Frameworks", Description = "Web and App Frameworks" },
+                new SkillCategory { Id = 3, Name = "Databases", Description = "Relational and NoSQL DBs" }
             );
 
             modelBuilder.Entity<Skill>().HasData(
-                new Skill { Id = 1, Name = "C#", CategoryId = 1 },
-                new Skill { Id = 2, Name = "Java", CategoryId = 1 },
-                new Skill { Id = 3, Name = "ASP.NET Core", CategoryId = 2 },
-                new Skill { Id = 4, Name = "React", CategoryId = 2 },
-                new Skill { Id = 5, Name = "SQL Server", CategoryId = 3 }
+                new Skill { Id = 1, Name = "C#", CategoryId = 1, IsActive = true, Description = "Ngôn ngữ C#" },
+                new Skill { Id = 2, Name = "Java", CategoryId = 1, IsActive = true, Description = "Ngôn ngữ Java" },
+                new Skill { Id = 3, Name = "ASP.NET Core", CategoryId = 2, IsActive = true, Description = "Web framework của Microsoft" },
+                new Skill { Id = 4, Name = "React", CategoryId = 2, IsActive = true, Description = "Thư viện frontend UI" },
+                new Skill { Id = 5, Name = "SQL Server", CategoryId = 3, IsActive = true, Description = "Hệ quản trị CSDL quan hệ" }
             );
 
             // Seed Many-to-Many

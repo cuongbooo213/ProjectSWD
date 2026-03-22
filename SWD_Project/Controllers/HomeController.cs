@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SWD_Project.Models;
+using SWD_Project.Models.Entities;
+using SWD_Project.Models.Enums;
 using System.Diagnostics;
 
 namespace SWD_Project.Controllers
