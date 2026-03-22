@@ -1,0 +1,58 @@
+@using SWD_Project.Models.Entities
+@model Request
+
+@{
+    ViewData["Title"] = "Delete Request";
+}
+
+<div class="row mt-4">
+    <div class="col-md-8 offset-md-2">
+        <div class="card border-danger mb-3">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Delete Request</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-danger">Are you sure you want to delete this specific request?</h5>
+                <p class="card-text text-muted">This action cannot be undone.</p>
+                <hr />
+                
+                <dl class="row mt-4">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Title)</dt>
+                    <dd class="col-sm-9 fw-bold">@Html.DisplayFor(model => model.Title)</dd>
+                    
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Content)</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Content)</dd>
+                    
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Status)</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Status == RequestStatus.Pending)
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                        else if (Model.Status == RequestStatus.Accepted)
+                        {
+                            <span class="badge bg-info text-dark">Accepted</span>
+                        }
+                        else if (Model.Status == RequestStatus.Completed)
+                        {
+                            <span class="badge bg-success">Completed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">@Model.Status</span>
+                        }
+                    </dd>
+                    
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CreatedAt)</dt>
+                    <dd class="col-sm-9">@Model.CreatedAt.ToString("g")</dd>
+                </dl>
+                
+                <form asp-action="DeleteRequest" class="mt-4">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger px-4">Delete</button>
+                    <a asp-action="ListRequests" class="btn btn-outline-secondary ms-2">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
