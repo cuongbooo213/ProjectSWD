@@ -1,14 +1,11 @@
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SWD_Project.Data;
 using SWD_Project.Models.Entities;
-using SWD_Project.Models.ViewModels;
 using SWD_Project.Models.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -33,44 +30,49 @@ namespace SWD_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(string username, string password, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
+
+            if (string.IsNullOrWhiteSpace(username))
+                ModelState.AddModelError("Username", "Username is required");
+
+            if (string.IsNullOrWhiteSpace(password))
+                ModelState.AddModelError("Password", "Password is required");
+
+            if (!ModelState.IsValid)
+                return View();
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (user != null && VerifyPassword(password, user.PasswordHash))
             {
-                var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
-                if (user != null && VerifyPassword(model.Password, user.PasswordHash))
+                if (user.IsBlocked)
                 {
-                    if (user.IsBlocked)
-                    {
-                        ModelState.AddModelError(string.Empty, "Your account has been blocked. Please contact support.");
-                        return View(model);
-                    }
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(ClaimTypes.Name, user.Username),
-                        new Claim(ClaimTypes.Role, user.Role.ToString()),
-                        new Claim("FullName", user.FullName)
-                    };
-
-                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var principal = new ClaimsPrincipal(identity);
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    else
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+                    ModelState.AddModelError(string.Empty, "Your account has been blocked. Please contact support.");
+                    return View();
                 }
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role.ToString()),
+                    new Claim("FullName", user.FullName)
+                };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
+
+                return RedirectToAction("Index", "Home");
             }
-            return View(model);
+
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View();
         }
 
         [HttpGet]
@@ -80,44 +82,63 @@ namespace SWD_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(
+            string username,
+            string fullName,
+            string email,
+            string password,
+            string confirmPassword,
+            Role role)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrWhiteSpace(username))
+                ModelState.AddModelError("Username", "Username is required");
+
+            if (string.IsNullOrWhiteSpace(fullName))
+                ModelState.AddModelError("FullName", "Full Name is required");
+
+            if (string.IsNullOrWhiteSpace(email))
+                ModelState.AddModelError("Email", "Email is required");
+
+            if (string.IsNullOrWhiteSpace(password))
+                ModelState.AddModelError("Password", "Password is required");
+
+            if (string.IsNullOrWhiteSpace(confirmPassword))
+                ModelState.AddModelError("ConfirmPassword", "Confirm Password is required");
+            else if (password != confirmPassword)
+                ModelState.AddModelError("ConfirmPassword", "Passwords do not match");
+
+            if (role != Role.Mentee && role != Role.Mentor)
+                ModelState.AddModelError("Role", "Please select a valid role (Mentee or Mentor)");
+
+            if (!ModelState.IsValid)
+                return View();
+
+            if (_context.Users.Any(u => u.Username == username))
             {
-                if (_context.Users.Any(u => u.Username == model.Username))
-                {
-                    ModelState.AddModelError("Username", "Username is already taken.");
-                    return View(model);
-                }
-                
-                if (_context.Users.Any(u => u.Email == model.Email))
-                {
-                    ModelState.AddModelError("Email", "Email is already in use.");
-                    return View(model);
-                }
-
-                if (model.Role != Role.Mentee && model.Role != Role.Mentor)
-                {
-                    ModelState.AddModelError("Role", "Please select a valid role (Mentee or Mentor).");
-                    return View(model);
-                }
-
-                var user = new User
-                {
-                    Username = model.Username,
-                    FullName = model.FullName,
-                    Email = model.Email,
-                    Role = model.Role,
-                    PasswordHash = HashPassword(model.Password)
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                TempData["SuccessMessage"] = "Registration successful! You can now log in.";
-                return RedirectToAction("Login");
+                ModelState.AddModelError("Username", "Username is already taken.");
+                return View();
             }
-            return View(model);
+
+            if (_context.Users.Any(u => u.Email == email))
+            {
+                ModelState.AddModelError("Email", "Email is already in use.");
+                return View();
+            }
+
+            var user = new User
+            {
+                Username = username,
+                FullName = fullName,
+                Email = email,
+                Role = role,
+                PasswordHash = HashPassword(password)
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Registration successful! You can now log in.";
+            return RedirectToAction("Login");
         }
 
         [HttpPost]
